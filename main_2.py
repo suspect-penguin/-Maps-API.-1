@@ -17,41 +17,40 @@ class Example(QWidget, Ui_Form):
         self.map_file = str()
         self.pixmap = None
         self.image = None
+        self.image = QLabel(self)
+        self.image.move(50, 50)
+        self.image.resize(600, 450)
         self.get_image()
 
     def get_image(self):
         map_request = f"http://static-maps.yandex.ru/1.x/?ll=37.530887,55.703118&z={self.z}&spn=0.002,0.002&l=map"
         response = requests.get(map_request)
-
         if not response:
             print("Ошибка выполнения запроса:")
             print(map_request)
             print("Http статус:", response.status_code, "(", response.reason, ")")
             sys.exit(1)
-
+        self.map_file = 'map.png'
         # Запишем полученное изображение в файл.
-        self.map_file = "map.png"
-        try:
-            with open(self.map_file, "wb") as file:
-                file.write(response.content)
-        except IOError as ex:
-            print("Ошибка записи временного файла:", ex)
-            sys.exit(1)
+        with open(self.map_file, "wb") as file:
+            file.write(response.content)
         self.pixmap = QPixmap(self.map_file)
-        self.image = QLabel(self)
-        self.image.move(0, 0)
-        self.image.resize(600, 450)
         self.image.setPixmap(self.pixmap)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_PageUp:
-            if self.z + 1 <= 19:
+            if self.z + 1 <= 17:
                 self.z += 1
                 self.get_image()
+                self.pixmap = QPixmap(self.map_file)
+                self.image.setPixmap(self.pixmap)
         elif event.key() == Qt.Key_PageDown:
             if self.z - 1 >= 1:
                 self.z -= 1
                 self.get_image()
+                self.pixmap = QPixmap(self.map_file)
+                self.image.setPixmap(self.pixmap)
+        self.update()
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
