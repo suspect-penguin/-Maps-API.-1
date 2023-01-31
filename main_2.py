@@ -23,7 +23,7 @@ class Example(QWidget, Ui_Form):
         self.get_image()
 
     def get_image(self):
-        map_request = f"http://static-maps.yandex.ru/1.x/?ll=37.530887,55.703118&z={self.z}&spn=0.002,0.002&l=map"
+        map_request = f"http://static-maps.yandex.ru/1.x/?ll=37.530887,55.703118&z={self.z}&l=map"
         response = requests.get(map_request)
         if not response:
             print("Ошибка выполнения запроса:")
