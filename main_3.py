@@ -18,9 +18,8 @@ class MapWindow(QWidget, Ui_Form):
         self.lat = 55.703118
         self.map_file = str()
         self.pixmap = None
-        self.image = None
         self.image = QLabel(self)
-        self.image.move(50, 50)
+        self.image.move(0, 0)
         self.image.resize(600, 450)
         self.get_image()
 
@@ -62,7 +61,6 @@ class MapWindow(QWidget, Ui_Form):
         self.get_image()
         self.pixmap = QPixmap(self.map_file)
         self.image.setPixmap(self.pixmap)
-        print(self.z)
         self.update()
 
     def closeEvent(self, event):
