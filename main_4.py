@@ -71,14 +71,14 @@ class MapWindow(QWidget, Ui_Form):
     def TextChargedEvent2(self):
         if self.current_text != self.radioButton_2.text():
             self.current_text = self.radioButton_2.text()
-            self.v = "map"
+            self.v = "sat"
         self.get_image()
         self.update()
 
     def TextChargedEvent3(self):
         if self.current_text != self.radioButton_3.text():
             self.current_text = self.radioButton_3.text()
-            self.v = "map"
+            self.v = "sat,skl"
         self.get_image()
         self.update()
 
