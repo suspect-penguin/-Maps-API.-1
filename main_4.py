@@ -5,7 +5,7 @@ import requests
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QInputDialog
 from PyQt5.QtCore import Qt
-from untitled_4 import Ui_Form
+from untitled import Ui_Form
 
 
 class MapWindow(QWidget, Ui_Form):
@@ -24,7 +24,6 @@ class MapWindow(QWidget, Ui_Form):
         self.image.move(0, 0)
         self.image.resize(600, 450)
         self.get_image()
-        self.pushButton.clicked.connect(self.v_changed)
         self.update()
 
     def get_image(self):
@@ -57,28 +56,16 @@ class MapWindow(QWidget, Ui_Form):
             self.lon += 0.002 * (18 - self.z)
         elif event.key() == Qt.Key_Left:
             self.lon -= 0.002 * (18 - self.z)
+        elif event.key() == Qt.Key_1:
+            self.v = 'map'
+        elif event.key() == Qt.Key_2:
+            self.v = 'sat'
+        elif event.key() == Qt.Key_3:
+            self.v = 'sat,skl'
         self.get_image()
         self.pixmap = QPixmap(self.map_file)
         self.image.setPixmap(self.pixmap)
         self.update()
-
-    def v_changed(self):
-        vom = ['Схема', 'Спутник', 'Гибрид']
-        v, ok_pressed = QInputDialog.getItem(
-            self, "MapWindow", "Вид карты",
-            tuple([i for i in vom if i != self.current_v]), 0, False)
-        if ok_pressed:
-            if v == 'Схема':
-                self.v = 'map'
-            elif v == 'Спутник':
-                self.v = 'sat'
-            elif v == 'Гибрид':
-                self.v = 'sat,skl'
-            self.current_v = v
-            self.get_image()
-            self.pixmap = QPixmap(self.map_file)
-            self.image.setPixmap(self.pixmap)
-            self.update()
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
