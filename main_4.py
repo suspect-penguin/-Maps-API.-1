@@ -3,9 +3,9 @@ import sys
 
 import requests
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QInputDialog
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from PyQt5.QtCore import Qt
-from untitled import Ui_Form
+from untitled_4 import Ui_Form
 
 
 class MapWindow(QWidget, Ui_Form):
@@ -17,14 +17,16 @@ class MapWindow(QWidget, Ui_Form):
         self.lon = 37.530887
         self.lat = 55.703118
         self.v = 'map'
-        self.current_v = 'Схема'
+        self.current_text = 'Схема'
         self.map_file = str()
         self.pixmap = None
         self.image = QLabel(self)
         self.image.move(0, 0)
         self.image.resize(600, 450)
         self.get_image()
-        self.update()
+        self.radioButton.clicked.connect(self.TextChargedEvent1)
+        self.radioButton_2.clicked.connect(self.TextChargedEvent2)
+        self.radioButton_3.clicked.connect(self.TextChargedEvent3)
 
     def get_image(self):
         map_request = f"http://static-maps.yandex.ru/1.x/?ll={self.lon},{self.lat}&z={self.z}&l={self.v}"
@@ -48,23 +50,36 @@ class MapWindow(QWidget, Ui_Form):
         elif event.key() == Qt.Key_PageDown:
             if self.z - 1 >= 1:
                 self.z -= 1
-        elif event.key() == Qt.Key_Up:
+        elif event.key() == Qt.Key_W:
             self.lat += 0.0015 * (18 - self.z)
-        elif event.key() == Qt.Key_Down:
+        elif event.key() == Qt.Key_S:
             self.lat -= 0.0015 * (18 - self.z)
-        elif event.key() == Qt.Key_Right:
+        elif event.key() == Qt.Key_D:
             self.lon += 0.002 * (18 - self.z)
-        elif event.key() == Qt.Key_Left:
+        elif event.key() == Qt.Key_A:
             self.lon -= 0.002 * (18 - self.z)
-        elif event.key() == Qt.Key_1:
-            self.v = 'map'
-        elif event.key() == Qt.Key_2:
-            self.v = 'sat'
-        elif event.key() == Qt.Key_3:
-            self.v = 'sat,skl'
         self.get_image()
-        self.pixmap = QPixmap(self.map_file)
-        self.image.setPixmap(self.pixmap)
+        self.update()
+
+    def TextChargedEvent1(self):
+        if self.current_text != self.radioButton.text():
+            self.current_text = self.radioButton.text()
+            self.v = "map"
+        self.get_image()
+        self.update()
+
+    def TextChargedEvent2(self):
+        if self.current_text != self.radioButton_2.text():
+            self.current_text = self.radioButton_2.text()
+            self.v = "sat"
+        self.get_image()
+        self.update()
+
+    def TextChargedEvent3(self):
+        if self.current_text != self.radioButton_3.text():
+            self.current_text = self.radioButton_3.text()
+            self.v = "sat,skl"
+        self.get_image()
         self.update()
 
     def closeEvent(self, event):
