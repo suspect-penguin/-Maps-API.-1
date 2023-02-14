@@ -1,11 +1,11 @@
-import os
+﻿import os
 import sys
 
 import requests
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from PyQt5.QtCore import Qt
-from untitled_4 import Ui_Form
+from untitled_5 import Ui_Form
 
 
 class MapWindow(QWidget, Ui_Form):
@@ -107,7 +107,18 @@ class MapWindow(QWidget, Ui_Form):
             self.z = 12
             self.map_request = f"http://static-maps.yandex.ru/1.x/?ll={self.lon},{self.lat}&z={self.z}&l={self.v}" \
                           f"&pt={self.lon},{self.lat}"
-        self.get_image()
+        response = requests.get(self.map_request)
+        if not response:
+            print("Ошибка выполнения запроса:")
+            print(response)
+            print("Http статус:", response.status_code, "(", response.reason, ")")
+            sys.exit(1)
+        self.map_file = 'map.png'
+        # Запишем полученное изображение в файл.
+        with open(self.map_file, "wb") as file:
+            file.write(response.content)
+        self.pixmap = QPixmap(self.map_file)
+        self.image.setPixmap(self.pixmap)
         self.update()
 
     def closeEvent(self, event):
